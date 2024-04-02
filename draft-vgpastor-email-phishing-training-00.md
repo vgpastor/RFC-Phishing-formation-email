@@ -6,7 +6,7 @@ submissiontype: IETF
 area: Internet Applications and Services
 wg: Internet Engineering Task Force
 
-docname: email-phishing-training
+docname: draft-vgpastor-email-phishing-training-00
 
 title: "Proposal for the Introduction of Email Headers for Phishing Detection Training"
 abbrev: "Phishing Detection Training Headers"
@@ -21,7 +21,7 @@ kw:
 author:
 - role: editor
   ins: V.G.P. vgpastor
-  name: Víctor García Pastor
+  name: Victor Garcia Pastor
   email: vgpastor08@gmail.com
   uri: https://twitter.com/vgpastor
 contributor:
@@ -72,7 +72,7 @@ The same company may have several phishing detection training providers, so it i
 
 By using user phishing detection reporting systems, you can identify which phishing detection training providers are being most effective and those who need improvement. Finally you can use these rules to filter reported messages.
 
-```Phishing-Simulation-Provider: domain.com```
+```Phishing-Simulation-Provider: example.com```
 
 #### Phishing-Simulation-Auth Header
 DNS record that contains the email authentication information.
@@ -83,7 +83,7 @@ This record must be dynamic for each domain since it allows you to publicly hide
 #### Phishing-Simulation-Report Header
 Email address or url endpoint where to send the reported email through a PUT request.
 It is important that the original headers of the email be sent to the mailbox or url endpoint for analysis, also allowing their analysis.
-```Phishing-Simulation-Report: reports@domain.com```
+```Phishing-Simulation-Report: reports@example.com```
 
 ### DNS Verification Mechanism
 Details how mail systems can use the proposed headers to perform DNS queries and verify the authenticity of training emails.
@@ -93,15 +93,15 @@ The DNS record should be dynamic for each domain, this way it can be hidden if a
 
 The content of the registry stores both the emails authorized to send the emails and the domains authorized for the links.
 
-```xxxxxxxxxxxx.domain.com TXT v:pdt1; sender:domain-that-send-email.com,domain-that-send-email2.com ;links:domain-links.com,domain-links.com ```
+```xxxxxxxxxxxx.example.com TXT v:pdt1; sender:domain-that-send-email.com,domain-that-send-email2.com ;links:domain-links.com,domain-links.com ```
 
 It is also necessary that the values can be authorized externally, in case a provider needs to modify, add or delete domains for both sending and links, clients do not have to continually modify their own records.
 
 Provider DNS entry
-```_pdt.domain.com TXT v:pdt1; sender:domain-that-send-email.com,domain-that-send-email2.com ;links:domain-links.com,domain-links2.com ```
+```_pdt.example.com TXT v:pdt1; sender:domain-that-send-email.com,domain-that-send-email2.com ;links:domain-links.com,domain-links2.com ```
 
 Client DNS entry
-```xxxxxxxxxxx.domain.com TXT v:pdt1; sender:domain-that-send-email3.com,_pdt.domain.com ;links:domain-links3.com,_pdt.domain.com ```
+```xxxxxxxxxxx.example.net TXT v:pdt1; sender:domain-that-send-email3.com,_pdt.example.com ;links:domain-links3.com,_pdt.example.com ```
 
 ### Link Validation Mechanism
 Validating links within the email is an important step in preventing users from clicking on malicious links. The addition of a link validation mechanism is proposed to allow email systems to verify the authenticity of links in training emails.
@@ -133,30 +133,30 @@ When a client of an email sending provider, such as Sendgrid, Mailgun, etc., sen
 
 ## Example
 
-- provider.com -> Phishing detection training provider domain
+- example.com -> Phishing detection training provider domain
+- example.net -> Domain of the client that receives the phishing detection training email
 - test.com -> Domain used to send the phishing detection training email
-- example.com -> Domain used for links in the phishing detection training email
-- client.com -> Domain of the client that receives the phishing detection training email
+- example.org -> Domain used for links in the phishing detection training email
 
 ### DNS entries
-```_pdt.provider.com TXT v:pdt1; sender:test.com ;links:example-alternative.com ```
+```_pdt.example.com TXT v:pdt1; sender:test.com ;links:example.org ```
 
-```2654896524568._pdt.client.com TXT v:pdt1; sender:_pdt.provider.com ;links:_pdt.provider.com ```
+```2654896524568._pdt.example.net TXT v:pdt1; sender:_pdt.example.com ;links:_pdt.example.com ```
 
 ### E-Mail sent
 ```
 From: fake@mail.test.com
-To: user@client.com
+To: user@example.net
 Subject: Message from CEO
 Message-ID: <05c18622-f2ad-cb77-2ce9-a0bbfc7d7ad0@example.com>
 Date: Mon, 25 Mar 2024 10:00:00 -0400
 Phishing-Simulation: fcbdc611-3807-4cfc-a521-f7beb4ca39ff
-Phishing-Simulation-Provider: provider.com
+Phishing-Simulation-Provider: example.com
 Phishing-Simulation-Auth: 2654896524568
-Phishing-Simulation-Report: reports@provider.com
+Phishing-Simulation-Report: reports@example.com
 Content-Type: text/plain; charset=utf-8
 
-Please send 1M USD to the following account: https://transfers.example-alternative.com/bank-account
+Please send 1M USD to the following account: https://transfers.example.org/bank-account
 
 Regards
 ```

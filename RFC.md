@@ -73,16 +73,22 @@ Entrada en el servicio
 Entrada en el cliente
 ```xxxxxxxxxxx.domain.com TXT v:pdt1; sender:domain-that-send-email3.com,_pdt.domain.com ;links:domain-links3.com,_pdt.domain.com ```
 
-
-### Legitimación del Remitente
-Proporciona recomendaciones sobre cómo los remitentes de correos electrónicos de formación pueden legitimar sus dominios para evitar el abuso de este mecanismo.
-
 ### Mecanismo de Validación de Enlaces
 La validación de los enlaces dentro del correo electrónico es un paso importante para evitar que los usuarios hagan clic en enlaces maliciosos. Se propone la adición de un mecanismo de validación de enlaces que permita a los sistemas de correo verificar la autenticidad de los enlaces en los correos electrónicos de formación.
 
+Se debe verificar que todos los enlaces contenidos en el cuerpo del email, estén dentro de los habilitados en el registro DNS del dominio del remitente.
+
+### Reporte de Correos Electrónicos
+Cuando el usuario final reciba un email de formación de phishing que sea identificado por el usuario como tal, este podrá utilizar los medios habituales para el reporte de este correo.
+
+El proveedor de correo, o el cliente de correo electrónico, cuando exista la cabecera en el email `Phishing-Simulation-Report`, podrá enviar el correo a la dirección de email o enlace proporcionado en la cabecera para que el proveedor de formación en detección de phishing pueda analizar el correo y mejorar su formación, es importante que este reporte incluya las cabeceras originales del correo para su análisis.
+
 ## Seguridad
 Se han considerado las implicaciones de seguridad de esta propuesta y se han proporcionado recomendaciones para mitigar posibles riesgos.
-Actualmente no se han identificado riesgos de seguridad significativos asociados con esta propuesta. Sin embargo, es importante que los remitentes de correos electrónicos de formación sigan las recomendaciones de seguridad proporcionadas en este documento para evitar el abuso de este mecanismo.
+
+Actualmente, no se han identificado riesgos de seguridad significativos asociados con esta propuesta. Sin embargo, es importante que los remitentes de correos electrónicos de formación sigan las recomendaciones de seguridad proporcionadas en este documento para evitar el abuso de este mecanismo.
+
+Esta propuesta no tiene en cuenta la habilitación para el envío de correos electrónicos  a usuarios finales particulares que utilicen cuentas de emails genéricas (google.com, live.com, etc), sin embargos los propios proveedores de emails podrían agregar esta funcionalidad para mejorar la seguridad de sus usuarios, permitiendo a cada uno de los usuarios habilitar un proveedor de formación en detección de phishing.
 
 ## Implementación
 1. Los proveedores de formación en detección de phishing deben implementar las cabeceras de correo electrónico propuestas en sus correos electrónicos de formación.
@@ -96,6 +102,11 @@ Actualmente no se han identificado riesgos de seguridad significativos asociados
 5. Los usuarios deben utilizar los sistemas de reporte de detección de phishing para reportar correos electrónicos sospechosos y mejorar la efectividad de los programas de formación en detección de phishing.
    1. El sistema de correo electrónico enviará el correo reportado al proveedor de formación en detección de phishing para su análisis y mejora.
    2. Si no existiera entrada para el reporte se dentendrá el envío del correo a sistemas antiphising y se marcará como sospechoso.
+
+### Implementación en proveedor de envío de emails
+Cuando un cliente de un proveedor de envío de emails, tipo Sendgrid, Mailgun, etc, envíe un correo electrónico de formación en detección de phishing, el proveedor puede verificar si está autorizado para el envío de este tipo de emails para garantizar un buen uso de sus sistemas.
+1. El receptor del correo electrónico de formación en detección de phishing debe tener un registro DNS con la información de orígenes permitidos.
+2. El proveedor de envío de emails debe realizar una consulta DNS para verificar la autenticidad del correo electrónico y la legitimidad del remitente para enviar estos correos al destinatario.
 
 ## Ejemplos
 
